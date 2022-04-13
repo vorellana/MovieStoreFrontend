@@ -1,4 +1,4 @@
-# Movie Store - FRONTEND|
+# Movie Store - FRONTEND
 ## https://moviestorefrontend.azurewebsites.net/
 
 ### Desarrollo de una Aplicación Web a cerca de un Sistema de Compra y Renta de Películas.
@@ -6,8 +6,8 @@
 ### La aplicación se encuentra desplegada en el servicio **Azure** y puede acceder inmediatamente en el enlace:
 ### https://moviestorefrontend.azurewebsites.net/
 
-![alt text](https://github.com/vorellana/MovieStoreFrontend/blob/master/resources/backend-1.png?raw=true)
-![alt text](https://github.com/vorellana/MovieStoreFrontend/blob/master/resources/backend-2.png?raw=true)
+![alt text](https://github.com/vorellana/MovieStoreFrontend/blob/master/resources/frontend-1.png?raw=true)
+![alt text](https://github.com/vorellana/MovieStoreFrontend/blob/master/resources/frontend-2.png?raw=true)
 
 ## 1. Características
 * La solución contiene 2 proyectos para un mayor orden y mantenibilidad del código.
