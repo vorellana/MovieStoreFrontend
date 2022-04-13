@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieStoreFrontend.DTO\MovieStoreFrontend.DTO.csproj" />
-    <ProjectReference Include="..\MovieStoreFrontend.Entities\MovieStoreFrontend.Entities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using MovieStoreFrontend.WebAppBlazor.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var backendUrl = builder.Configuration.GetSection("MovieStoreBackendUrl").Value;
@@ -8,7 +7,6 @@ var backendUrl = builder.Configuration.GetSection("MovieStoreBackendUrl").Value;
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton(new HttpClient
 {
     BaseAddress = new Uri(backendUrl)

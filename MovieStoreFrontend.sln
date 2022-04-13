@@ -5,11 +5,7 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStoreFrontend.WebAppBlazor", "MovieStoreFrontend.WebAppBlazor\MovieStoreFrontend.WebAppBlazor.csproj", "{727856DF-7EAB-40B3-93A0-A0999B33BF58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStoreFrontend.Entities", "MovieStoreFrontend.Entities\MovieStoreFrontend.Entities.csproj", "{0788ACA3-31AE-4A9F-93E6-95BD889B4539}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieStoreFrontend.DTO", "MovieStoreFrontend.DTO\MovieStoreFrontend.DTO.csproj", "{4256E68B-67CB-4252-901E-0DA0821E3886}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieStoreFrontend.Services", "MovieStoreFrontend.Services\MovieStoreFrontend.Services.csproj", "{73C6488F-CFE8-4C5A-83FE-57CC7677E5E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +17,10 @@ Global
 		{727856DF-7EAB-40B3-93A0-A0999B33BF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{727856DF-7EAB-40B3-93A0-A0999B33BF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{727856DF-7EAB-40B3-93A0-A0999B33BF58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0788ACA3-31AE-4A9F-93E6-95BD889B4539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0788ACA3-31AE-4A9F-93E6-95BD889B4539}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0788ACA3-31AE-4A9F-93E6-95BD889B4539}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0788ACA3-31AE-4A9F-93E6-95BD889B4539}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4256E68B-67CB-4252-901E-0DA0821E3886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4256E68B-67CB-4252-901E-0DA0821E3886}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4256E68B-67CB-4252-901E-0DA0821E3886}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4256E68B-67CB-4252-901E-0DA0821E3886}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73C6488F-CFE8-4C5A-83FE-57CC7677E5E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73C6488F-CFE8-4C5A-83FE-57CC7677E5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73C6488F-CFE8-4C5A-83FE-57CC7677E5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73C6488F-CFE8-4C5A-83FE-57CC7677E5E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

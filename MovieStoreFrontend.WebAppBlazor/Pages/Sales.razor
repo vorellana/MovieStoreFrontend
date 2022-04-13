@@ -1,0 +1,344 @@
+﻿@page "/sales"
+@using MovieStoreFrontend.DTO
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h2 style="border-bottom: groove">Venta</h2>
+
+<div class="form-group row" style="margin-top: 20px; margin-bottom: 15px">
+    <div class="col-sm-3">
+        <label for="department" class="col-form-label">
+            <b>Cliente</b>
+        </label>
+        <select name="select" class="form-control" @onchange="changeSelectedCustomer">
+            @if (customerResponse!= null && customerResponse.Data != null)
+            {
+                <option value="" disabled selected>Seleccionar</option>
+                @foreach (var oElement in (List<CustomerDTO>)customerResponse.Data)
+                {
+                    <option value=@oElement.Id.ToString()>@oElement.Name @oElement.LastNames</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-3">
+        <label for="department" class="col-form-label">
+            <b>Tipo de documento</b>
+        </label>
+        <select name="select" class="form-control" @onchange="changeSelectedDocType">
+            <option value="" selected disabled>Seleccionar</option>
+            <option value="boleta">Boleta</option>
+            <option value="factura">Factura</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row" style="margin-top: 20px; margin-bottom: 15px">
+    <div class="col-sm-3">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" @onclick="OpenPopup">
+            Agregar película
+        </button>
+    </div>
+</div>
+
+<!-- Data Table -->
+
+<div class="form-group row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Película</th>
+                    <th>Operación</th>
+                    <th>Precio</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (salesDetailItemList != null) {
+                    @foreach (var item in (List<SalesDetailItem>)salesDetailItemList)
+                    {
+                        <tr @key=item.Nbr>
+                            <td>@item.Nbr</td>
+                            <td>@item.Movie</td>
+                            <td>@item.Operation</td>
+                            <td>@item.Price</td>
+                            <td><button type="button" class="btn btn-danger btn-sm" @onclick = "() => deleteSaleDetailItem(item)">Eliminar</button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-12">
+        <label for="department" class="col-form-label">
+            <b>Total: @totalAmount</b>
+        </label>
+        <button type="button" class="btn btn-primary float-end" data-toggle="modal" data-target="#exampleModal" @onclick="saveSale">
+            Confirmar venta
+        </button>
+    </div>
+</div>
+
+<!-- Modal -->
+
+@if (popup)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display:block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: skyblue">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar película</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ClosePopup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Película</label>
+                            <select name="select" class="form-control" @onchange="changeSelectedMovie">
+                                @if (oResponse != null && oResponse.Data != null)
+                                {
+                                    <option value="" disabled selected>Seleccionar</option>
+                                    @foreach (var oElement in (List<MovieDTO>)oResponse.Data)
+                                    {
+                                        <option value=@oElement.Id.ToString()>@oElement.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Comprar o rentar</label>
+                            <select name="select" class="form-control" @onchange="changeSelectedTypeOperation">
+                                <option value="" disabled selected>Seleccionar</option>
+                                <option value="compra">Comprar</option>
+                                <option value="renta">Rentar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Monto:</label>
+                            <input type="text" class="form-control" id="recipient-name" @bind="selectedAmount" readonly>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="addSaleDetailItem">Agregar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="ClosePopup">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (popupMessage)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display:block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: lightgoldenrodyellow">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Información</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="ClosePopupMessage">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>@validationMessage</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    #nullable disable
+    private bool popup = false;
+    private bool popupMessage = false;
+    private string moviesPath = "/api/Movies";
+    private string customersPath = "/api/Customers";
+    private string salesPath = "/api/Sales";
+    private string selectedDocType = "";
+    private string selectedCustomer= "";
+    private string selectedMovie = "";
+    private string selectedTypeOperation = "";
+    private string validationMessage = "";
+    private decimal selectedAmount = 0;
+    private decimal totalAmount = 0;
+    private int itemCount = 0;
+    private Response<List<MovieDTO>> oResponse = new Response<List<MovieDTO>>();
+    private Response<List<CustomerDTO>> customerResponse = new Response<List<CustomerDTO>>();
+    private List<SalesDetailItem> salesDetailItemList = new List<SalesDetailItem>();
+
+    protected override async Task OnInitializedAsync() {
+        oResponse = await Http.GetFromJsonAsync<Response<List<MovieDTO>>>(moviesPath);
+        customerResponse = await Http.GetFromJsonAsync<Response<List<CustomerDTO>>>(customersPath);
+    } 
+
+    private void OpenPopup()
+    {
+        popup = true;
+    }
+
+    private void ClosePopup()
+    {
+        popup = false;
+        selectedMovie = "";
+        selectedTypeOperation = "";
+    }
+
+    private void ClosePopupMessage()
+    {
+        popupMessage = false;
+    }
+
+    private void changeSelectedDocType(ChangeEventArgs e)
+    {
+        selectedDocType = e.Value.ToString();
+    }
+
+    private void changeSelectedCustomer(ChangeEventArgs e)
+    {
+        selectedCustomer = e.Value.ToString();
+    }
+
+    private void changeSelectedMovie(ChangeEventArgs e)
+    {
+        selectedMovie = e.Value.ToString();
+        handleSelectedAmount();
+    }
+
+    private void changeSelectedTypeOperation(ChangeEventArgs e)
+    {
+        selectedTypeOperation = e.Value.ToString();
+        handleSelectedAmount();
+    }
+
+    private void handleSelectedAmount()
+    {
+        if (selectedMovie != "" && selectedTypeOperation != "")
+        {
+            if (selectedTypeOperation == "compra")
+                selectedAmount = oResponse.Data.Find(item => item.Id == int.Parse(selectedMovie)).PurchasePrice;
+            else
+                selectedAmount = oResponse.Data.Find(item => item.Id == int.Parse(selectedMovie)).RentalPrice;
+        }
+    }
+
+    private bool validateSaleDetail()
+    {
+        var response = false;
+        if (String.IsNullOrEmpty(selectedMovie))
+        {
+            validationMessage = "Debe seleccionar una película.";
+        }
+        else if (String.IsNullOrEmpty(selectedTypeOperation))
+        {
+            validationMessage = "Debe seleccionar si va Comprar o Rentar.";
+        }
+        else
+        {
+            response = true;
+        }
+        return response;
+    }
+
+    private bool validateSale()
+    {
+        var response = false;
+        if (String.IsNullOrEmpty(selectedCustomer))
+        {
+            validationMessage = "Debe seleccionar un cliente.";
+        }
+        else if (String.IsNullOrEmpty(selectedDocType))
+        {
+            validationMessage = "Debe seleccionar un tipo de documento.";
+        }
+        else if (salesDetailItemList == null || salesDetailItemList.Count == 0)
+        {
+            validationMessage = "Debe seleccionar una o más peliculas.";
+        }
+        else
+        {
+            response = true;
+        }
+        return response;
+    }
+
+    private void addSaleDetailItem()
+    {
+        if (validateSaleDetail())
+        {
+            itemCount++;
+            totalAmount += selectedAmount;
+            var movieName = oResponse.Data.Find(item => item.Id == int.Parse(selectedMovie)).Name;
+            var SalesDetailItemTemp = new SalesDetailItem
+                {
+                    Nbr = itemCount,
+                    Movie = movieName,
+                    MovieId = selectedMovie,
+                    Price = selectedAmount,
+                    Operation = selectedTypeOperation
+                };
+            salesDetailItemList.Add(SalesDetailItemTemp);
+            popup = false;
+            selectedAmount = 0;
+            selectedMovie = "";
+            selectedTypeOperation = "";
+        }
+        else
+        {
+            popupMessage = true;
+        }
+    }
+
+    private void deleteSaleDetailItem(SalesDetailItem item) 
+    {
+        salesDetailItemList = salesDetailItemList.Where(val => val.Nbr != item.Nbr).ToList();
+        totalAmount -= item.Price;
+    }
+
+    private async void saveSale()
+    {
+        if (validateSale())
+        {
+            var saleDto = new SaleDTO();
+            saleDto.Type = selectedDocType;
+            saleDto.TotalAmount = totalAmount;
+            saleDto.CustomerId = int.Parse(selectedCustomer);
+            var saleDetailDtoList = new List<SaleDetailDTO>();
+
+            salesDetailItemList.ForEach(item =>
+            {
+                var saleDetailDTO = new SaleDetailDTO();
+                saleDetailDTO.DiskId = 0;
+                saleDetailDTO.SaleId = 0;
+                saleDetailDTO.Type = item.Operation;
+                saleDetailDTO.Amount = item.Price;
+                saleDetailDTO.MovieId = int.Parse(item.MovieId);
+                saleDetailDtoList.Add(saleDetailDTO);
+            });
+
+            saleDto.SaleDetailDtoList = saleDetailDtoList;
+            var source = new CancellationTokenSource();
+            var response = await Http.PostAsJsonAsync<SaleDTO>(salesPath, saleDto, source.Token);
+
+            validationMessage = "Se Registró la Venta.";
+            popupMessage = true;
+            StateHasChanged();
+
+            Task.Delay(2000).Wait();
+            popupMessage = false;
+            NavigationManager.NavigateTo("");
+        }
+        else
+        {
+            popupMessage = true;
+        }
+    }
+
+}
