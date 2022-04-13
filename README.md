@@ -15,7 +15,7 @@
 * Consumo de una API propia (MovieStoreBackend, el otro proyecto).
 * Despliegue y publicación en el servicio de nube Azure.
 * Manejo de errores.
-* 3 de opciones de ménú.
+* 3 de opciones de menú.
 * Diseño responsivo (Se adapta a cualquier tamaño de pantalla).
 
 ## 2. Fuente de datos
